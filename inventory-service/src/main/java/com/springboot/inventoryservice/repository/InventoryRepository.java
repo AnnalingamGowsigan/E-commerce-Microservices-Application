@@ -1,6 +1,5 @@
 package com.springboot.inventoryservice.repository;
 
-import aj.org.objectweb.asm.commons.Remapper;
 import com.springboot.inventoryservice.model.Inventory;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
