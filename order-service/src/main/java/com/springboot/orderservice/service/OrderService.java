@@ -1,6 +1,7 @@
 package com.springboot.orderservice.service;
 
 
+import com.springboot.orderservice.dto.InventoryResponse;
 import com.springboot.orderservice.dto.OrderLineItemsDto;
 import com.springboot.orderservice.model.OrderLineItems;
 import com.springboot.orderservice.dto.OrderRequest;
@@ -10,7 +11,10 @@ import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.reactive.function.client.WebClient;
 
+import java.lang.reflect.Array;
+import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
@@ -20,8 +24,9 @@ import java.util.UUID;
 public class OrderService {
 
     private final OrderRepository orderRepository;
+    private final WebClient webClient;
 
-    public void placeOrder(OrderRequest orderRequest) {
+    public void placeOrder(OrderRequest orderRequest) throws IllegalAccessException {
         // Place order logic
         Order order = new Order();
         order.setOrderNumber(UUID.randomUUID().toString());
@@ -35,6 +40,21 @@ public class OrderService {
 
         order.setOrderLineItemsList(orderLineItemsList);
 
-        orderRepository.save(order);
+        List<String> skuCodes = order.getOrderLineItemsList().stream().map(OrderLineItems::getSkuCode).toList();
+
+        //call the inventory service and place the order if product is in stock
+        InventoryResponse[] resultArray  = webClient.get()
+                            .uri("http://localhost:8082/api/inventory",
+                                    uriBuilder -> uriBuilder.queryParam("skuCode", skuCodes).build())
+                            .retrieve()
+                            .bodyToMono(InventoryResponse[].class)
+                            .block(); //for made it synchronous
+
+        Boolean result = Arrays.stream(resultArray).allMatch(InventoryResponse->InventoryResponse.isInStock());
+        if(Boolean.TRUE.equals(result)){
+            orderRepository.save(order);
+        }else {
+            throw new IllegalArgumentException("Product is out of stock. please try again later.");
+        }
     }
 }
