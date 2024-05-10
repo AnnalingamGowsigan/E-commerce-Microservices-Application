@@ -26,7 +26,7 @@ public class OrderService {
     private final OrderRepository orderRepository;
     private final WebClient.Builder webClientBuilder;
 
-    public void placeOrder(OrderRequest orderRequest) throws IllegalAccessException {
+    public String placeOrder(OrderRequest orderRequest) throws IllegalAccessException {
         // Place order logic
         Order order = new Order();
         order.setOrderNumber(UUID.randomUUID().toString());
@@ -53,6 +53,7 @@ public class OrderService {
         Boolean result = Arrays.stream(resultArray).allMatch(InventoryResponse->InventoryResponse.isInStock());
         if(Boolean.TRUE.equals(result)){
             orderRepository.save(order);
+            return "Order placed successfully";
         }else {
             throw new IllegalArgumentException("Product is out of stock. please try again later.");
         }
