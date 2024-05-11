@@ -24,15 +24,19 @@ public class OrderController {
     @CircuitBreaker(name="inventory", fallbackMethod= "orderServiceFallback")
     @TimeLimiter(name="inventory")
     @Retry(name="inventory")
-    public CompletableFuture<String> placeOrder(@RequestBody OrderRequest orderRequest) throws IllegalAccessException {
-        return CompletableFuture.supplyAsync(()-> {
-            try {
-                return orderService.placeOrder(orderRequest);
-            } catch (IllegalAccessException e) {
-                throw new RuntimeException(e);
-            }
-        });
+//    public CompletableFuture<String> placeOrder(@RequestBody OrderRequest orderRequest) throws IllegalAccessException {
+//        return CompletableFuture.supplyAsync(()-> {
+//            try {
+//                return orderService.placeOrder(orderRequest);
+//            } catch (IllegalAccessException e) {
+//                throw new RuntimeException(e);
+//            }
+//        });
+//    }
+    public String placeOrder(@RequestBody OrderRequest orderRequest) throws IllegalAccessException {
+        return orderService.placeOrder(orderRequest);
     }
+
 
     //implementation of fallback method
     public CompletableFuture<String> orderServiceFallback(OrderRequest orderRequest, RuntimeException e) {

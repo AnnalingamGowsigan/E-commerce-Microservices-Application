@@ -3,12 +3,15 @@ package com.springboot.orderservice.service;
 
 import com.springboot.orderservice.dto.InventoryResponse;
 import com.springboot.orderservice.dto.OrderLineItemsDto;
+import com.springboot.orderservice.event.OrderPlacedEvent;
 import com.springboot.orderservice.model.OrderLineItems;
 import com.springboot.orderservice.dto.OrderRequest;
 import com.springboot.orderservice.model.Order;
 import com.springboot.orderservice.repository.OrderRepository;
+import io.micrometer.observation.ObservationRegistry;
 import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -25,6 +28,7 @@ public class OrderService {
 
     private final OrderRepository orderRepository;
     private final WebClient.Builder webClientBuilder;
+    private final ApplicationEventPublisher applicationEventPublisher;
 
     public String placeOrder(OrderRequest orderRequest) throws IllegalAccessException {
         // Place order logic
@@ -53,6 +57,8 @@ public class OrderService {
         Boolean result = Arrays.stream(resultArray).allMatch(InventoryResponse->InventoryResponse.isInStock());
         if(Boolean.TRUE.equals(result)){
             orderRepository.save(order);
+            // publish Order Placed Event
+            applicationEventPublisher.publishEvent(new OrderPlacedEvent(this, order.getOrderNumber()));
             return "Order placed successfully";
         }else {
             throw new IllegalArgumentException("Product is out of stock. please try again later.");
