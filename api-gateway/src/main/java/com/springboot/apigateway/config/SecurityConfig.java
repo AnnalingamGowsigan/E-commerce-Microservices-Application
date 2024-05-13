@@ -8,7 +8,7 @@ import org.springframework.security.config.web.server.ServerHttpSecurity;
 import org.springframework.security.web.server.SecurityWebFilterChain;
 
 @Configuration
-@EnableWebFluxSecurity //because spring-apigate is from spring-webflux not spring-webmvc
+@EnableWebFluxSecurity //because spring-apigateway is from spring-webflux not spring-webmvc
 public class SecurityConfig {
 
     @Bean

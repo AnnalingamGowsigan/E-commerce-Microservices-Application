@@ -1,0 +1,15 @@
+---
+version: '4'
+
+services:
+  ## MySQL Docker Compose Config
+  mysql-order:
+    container_name: mysql-order
+    image: mysql:8.3.0
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+    volumes:
+      - ../volumes/mysql-product:/var/lib/mysql
+      - ./docker/mysql/init.sql:/docker-entrypoint-initdb.d/init.sql
+    ports:
+      - "3307:3306"
