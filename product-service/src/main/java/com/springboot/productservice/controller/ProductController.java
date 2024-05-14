@@ -29,7 +29,7 @@ public class ProductController {
         return productService.getAllProducts();
     }
 
-    @GetMapping("/")
+    @GetMapping("/hello")
     @ResponseStatus(HttpStatus.OK)
     public String getHello() {
         return "Hello from product-service!";

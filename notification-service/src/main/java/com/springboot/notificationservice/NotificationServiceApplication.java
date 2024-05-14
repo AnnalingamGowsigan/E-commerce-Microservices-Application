@@ -1,6 +1,6 @@
 package com.springboot.notificationservice;
 
-import io.micrometer.observation.Observation;
+import com.springboot.notificationservice.event.OrderPlacedEvent;
 import io.micrometer.observation.ObservationRegistry;
 import io.micrometer.tracing.Tracer;
 import lombok.RequiredArgsConstructor;
@@ -25,7 +25,7 @@ public class NotificationServiceApplication {
 
     @KafkaListener(topics = "notificationTopic")
     public void handleNotification(OrderPlacedEvent orderPlacedEvent) {
-            log.info("Got message <{}>", orderPlacedEvent);
+        log.info("Got message <{}>", orderPlacedEvent);
         // send out an email notification
     }
 }

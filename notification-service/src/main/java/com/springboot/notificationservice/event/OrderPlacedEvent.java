@@ -1,10 +1,10 @@
-package com.springboot.orderservice.event;
+package com.springboot.notificationservice.event;
 
 import lombok.*;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class OrderPlacedEvent{
+public class OrderPlacedEvent {
     private String orderNumber;
 }

@@ -30,8 +30,9 @@ services:
       PGDATA: /data/postgres
     volumes:
       - ./volumes/postgres-inventory:/data/postgres
+#      - ./docker/postgres/init.sql:/docker-entrypoint-initdb.d/init.sql
     ports:
-      - "5432:5432"
+      - "5433:5432"
     restart: always
 
   ## Mongo Docker Compose Config
@@ -48,7 +49,7 @@ services:
         MONGO_INITDB_ROOT_PASSWORD: password
         MONOG_INITDB_DATABASE: product-service
     volumes:
-      - ./volumes/mongo-data:/data/db
+      - ./volumes/mongo-product:/data/db
 
   ## Keycloak Config with Mysql database
   keycloak-mysql:
@@ -83,7 +84,7 @@ services:
       - keycloak-mysql
 
   zookeeper:
-    image: confluentinc/cp-zookeeper:7.0.1
+    image: confluentinc/cp-zookeeper:7.3.2
     container_name: zookeeper
     ports:
       - "2181:2181"
@@ -92,7 +93,7 @@ services:
       ZOOKEEPER_TICK_TIME: 2000 # zookeeper send heartbeat every 2 seconds
 
   broker:
-    image: confluentinc/cp-kafka:7.0.1
+    image: confluentinc/cp-kafka:7.3.2
     container_name: broker
     ports:
       - "9092:9092"
@@ -122,8 +123,8 @@ services:
       - "8761:8761"
     environment:
       - SPRING_PROFILES_ACTIVE=docker
-#    depends_on:
-#      - zipkin
+    depends_on:
+      - zipkin
 #    pull_policy: always # whenever we build it is always download latest image
 
   api-gateway:
@@ -139,7 +140,7 @@ services:
     depends_on:
       - discovery-server
       - keycloak
-#      - zipkin
+      - zipkin
 #    pull_policy: always
 
   ## Product-Service Docker Compose Config
@@ -185,7 +186,7 @@ services:
       - discovery-server
       - api-gateway
     ports:
-      - "9099:8080"
+      - "7070:8080"
 #    pull_policy: always
 
   ## Notification-Service Docker Compose Config

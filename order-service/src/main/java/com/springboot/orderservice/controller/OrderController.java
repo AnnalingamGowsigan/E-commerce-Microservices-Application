@@ -19,11 +19,19 @@ public class OrderController {
 
     private final OrderService orderService;
 
+    @GetMapping("/hello")
+    public String hello() {
+        return "Hello from order service";
+    }
+
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     @CircuitBreaker(name="inventory", fallbackMethod= "orderServiceFallback")
-    @TimeLimiter(name="inventory")
-    @Retry(name="inventory")
+    public String placeOrder(@RequestBody OrderRequest orderRequest) throws IllegalAccessException {
+        return orderService.placeOrder(orderRequest);
+    }
+//    @TimeLimiter(name="inventory") //@TimeLimiter return type. CompletionStage expected.
+//    @Retry(name="inventory")
 //    public CompletableFuture<String> placeOrder(@RequestBody OrderRequest orderRequest) throws IllegalAccessException {
 //        return CompletableFuture.supplyAsync(()-> {
 //            try {
@@ -33,14 +41,9 @@ public class OrderController {
 //            }
 //        });
 //    }
-    public String placeOrder(@RequestBody OrderRequest orderRequest) throws IllegalAccessException {
-        return orderService.placeOrder(orderRequest);
-    }
-
 
     //implementation of fallback method
     public CompletableFuture<String> orderServiceFallback(OrderRequest orderRequest, RuntimeException e) {
         return CompletableFuture.supplyAsync(()->"Order service is down. Please try again later");
     }
-
 }

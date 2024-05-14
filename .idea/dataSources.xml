@@ -25,25 +25,32 @@
       </jdbc-additional-properties>
       <working-dir>$ProjectFileDir$</working-dir>
     </data-source>
-    <data-source source="LOCAL" name="inventory-service@postgres-inventory" uuid="0ff66aff-0d60-4b50-9b4f-eebcecb7d273">
+    <data-source source="LOCAL" name="inventory-service@localhost [2]" uuid="0ff66aff-0d60-4b50-9b4f-eebcecb7d273">
       <driver-ref>postgresql</driver-ref>
       <synchronize>true</synchronize>
       <imported>true</imported>
       <remarks>$PROJECT_DIR$/inventory-service/src/main/resources/application-docker.properties</remarks>
       <jdbc-driver>org.postgresql.Driver</jdbc-driver>
-      <jdbc-url>jdbc:postgresql://postgres-inventory:5432/inventory-service</jdbc-url>
+      <jdbc-url>jdbc:postgresql://localhost:5433/inventory-service</jdbc-url>
+      <jdbc-additional-properties>
+        <property name="com.intellij.clouds.kubernetes.db.host.port" />
+        <property name="com.intellij.clouds.kubernetes.db.enabled" value="false" />
+        <property name="com.intellij.clouds.kubernetes.db.resource.type" value="Deployment" />
+        <property name="com.intellij.clouds.kubernetes.db.container.port" />
+      </jdbc-additional-properties>
       <working-dir>$ProjectFileDir$</working-dir>
     </data-source>
-    <data-source source="LOCAL" name="order_service@postgres-order" uuid="fa655831-ac15-4816-907c-28ea8487adad">
+    <data-source source="LOCAL" name="order-service@localhost [2]" uuid="fa655831-ac15-4816-907c-28ea8487adad">
       <driver-ref>postgresql</driver-ref>
       <synchronize>true</synchronize>
       <imported>true</imported>
       <remarks>$PROJECT_DIR$/order-service/src/main/resources/application-docker.properties</remarks>
       <jdbc-driver>org.postgresql.Driver</jdbc-driver>
-      <jdbc-url>jdbc:postgresql://postgres-order:5431/order_service</jdbc-url>
+      <jdbc-url>jdbc:postgresql://localhost:5431/order-service</jdbc-url>
       <jdbc-additional-properties>
         <property name="com.intellij.clouds.kubernetes.db.host.port" />
         <property name="com.intellij.clouds.kubernetes.db.enabled" value="false" />
+        <property name="com.intellij.clouds.kubernetes.db.resource.type" value="Deployment" />
         <property name="com.intellij.clouds.kubernetes.db.container.port" />
       </jdbc-additional-properties>
       <working-dir>$ProjectFileDir$</working-dir>
